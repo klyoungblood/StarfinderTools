@@ -5,7 +5,7 @@
 	"skill":"Any"
 	},
 	{
-	"name":"Ace pilot",
+	"name":"Ace Pilot",
 	"Dex":1,
 	"skill":"Piloting"
 	},
@@ -40,7 +40,7 @@
 	"skill":"Life Science"
 	},
 	{
-	"name":"Scholar (Pyhsical Science)",
+	"name":"Scholar (Physical Science)",
 	"Int":1,
 	"skill":"Physical Science"
 	},
