@@ -1,0 +1,16 @@
+[
+	{
+	"name":"Haan",
+	"Dex":2,
+	"Str":2,
+	"Int":-2,
+	"Boon": true
+	},
+	{
+	"name":"Sarcesian",
+	"Dex":2,
+	"Cha":2,
+	"Str":-2,
+	"Boon": true
+	}
+]
