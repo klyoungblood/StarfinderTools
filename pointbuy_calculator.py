@@ -70,6 +70,7 @@ def load_classes():
 			with open(classfile) as json_data:
 				classset = json.load(json_data)
 				for charclass in classset:
+					charclass.setdefault('Source',dir)
 					classnames.append(charclass['name'])
 					classes.setdefault(charclass['name'],charclass)
 #	print classes
@@ -85,6 +86,7 @@ def load_themes():
 			with open(themesfile) as json_data:
 				themeset = json.load(json_data)
 				for theme in themeset:
+					theme.setdefault('Source',dir)
 					theme.setdefault('Str',0)
 					theme.setdefault('Dex',0)
 					theme.setdefault('Con',0)
@@ -107,6 +109,7 @@ def load_races():
 			with open(racesfile) as json_data:
 				raceset = json.load(json_data)
 				for race in raceset:
+					race.setdefault('Source',dir)
 					race.setdefault('Str',0)
 					race.setdefault('Dex',0)
 					race.setdefault('Con',0)
@@ -118,6 +121,19 @@ def load_races():
 					racenames.append(race['name'])
 					races.setdefault(race['name'],race)
 	#print races
+	
+def GetSources(things):
+	sources = {}
+	sourcelist = ""
+	for thing in things:
+		sources.setdefault(thing['Source'],True)
+	for source in sources:
+		if source:
+			sourcelist += source
+			sourcelist += ", "
+	return sourcelist[:-2]
+	
+	
 
 class Application(tk.Frame):
 	global top
@@ -333,6 +349,9 @@ class Application(tk.Frame):
 		if races[setrace]['Boon']:
 			wlabel=tk.Label(charframe, text="Boon required to play this character in Starfinder Society.")
 			wlabel.grid(row=10, column=0, columnspan=8, sticky=tk.S)
+			
+		slabel=tk.Label(charframe, text="Sources: "+GetSources((races[setrace],themes[settheme],classes[setclass])))
+		slabel.grid(row=11, column=0, columnspan=8, sticky=tk.S)
 		
 load_classes()
 load_themes()		
