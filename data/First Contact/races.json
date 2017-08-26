@@ -4,6 +4,7 @@
 	"Dex":2,
 	"Str":2,
 	"Int":-2,
+	"HP":4,
 	"Boon": true
 	},
 	{
@@ -11,6 +12,7 @@
 	"Dex":2,
 	"Cha":2,
 	"Str":-2,
+	"HP":4,
 	"Boon": true
 	}
 ]

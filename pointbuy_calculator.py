@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+#python 2 uses Tkinter, python 3 tkinter
 try:
 	import Tkinter as tk
 except ImportError:
@@ -12,10 +13,13 @@ themes = {}
 themenames = []
 races = {}
 racenames = []
+classes = {}
+classnames = []
 topframe=0
 charframe=0
 ctheme=0
 crace=0
+cclass=0
 cStr=0
 cDex=0
 cCon=0
@@ -30,8 +34,24 @@ cVars=[]
 
 #character = {'Str':10,'Dex':10,'Con':10,'Int':10,'Wis':10,'Cha':10}
 abilities = ['Str','Dex','Con','Int','Wis','Cha']
-modifiers = ["-5","-5","-4","-4","-3","-3","-2","-2","-1","-1","0","0","+1","+1","+2","+2","+3","+3","+4"]
+#modstrings = ["-5","-5","-4","-4","-3","-3","-2","-2","-1","-1","0","0","+1","+1","+2","+2","+3","+3","+4"]
 
+lowmods = [-5,-5,-4,-4,-3,-3,-2,-2,-1,-1]
+
+def getmodstring(abmod):
+	if(abmod <1):
+		return str(abmod)
+	else:
+		return "+"+str(abmod)
+
+def getabmod(ascore):
+	mod = 0
+	if ascore > 10:
+		mod = (ascore - 10) / 2
+	if ascore < 9:
+		mod = lowmods[ascore]
+	return mod
+	
 def clearrace(race):
 	for ab in abilities:
 		race[ab] = 0
@@ -39,7 +59,22 @@ def clearrace(race):
 def cleartheme(theme):
 	for ab in abilities:
 		theme[ab] = 0
-
+		
+def load_classes():
+	global classes
+	global classnames
+	datadir="data"
+	for dir in os.listdir(datadir):
+		classfile = os.path.join(datadir,dir,"classes.json")
+		if os.path.isfile(classfile):
+			with open(classfile) as json_data:
+				classset = json.load(json_data)
+				for charclass in classset:
+					classnames.append(charclass['name'])
+					classes.setdefault(charclass['name'],charclass)
+#	print classes
+					
+	
 def load_themes():
 	global themes
 	global themenames
@@ -108,7 +143,7 @@ class Application(tk.Frame):
 		top.columnconfigure(1, weight=1)       
 		#self.rowconfigure(0, weight=1)           
 		topframe=tk.Frame(top)
-		topframe.grid(row=1,column=1,sticky=tk.NW)
+		topframe.grid(row=1,column=1,sticky=tk.N)
 		charframe=tk.Frame(top)
 		charframe.grid(row=2,column=1,sticky=tk.NW)
 		cStr = tk.IntVar(charframe)
@@ -145,6 +180,7 @@ class Application(tk.Frame):
 		self.menubar()
 		self.racesmenu()
 		self.themesmenu()
+		self.classesmenu()
 		self.refreshchar(top)
 		
 	def about(self):
@@ -182,7 +218,7 @@ class Application(tk.Frame):
 		crace.set(racenames[0])
 		crace.trace("w",self.refreshchar)
 		w = tk.OptionMenu(topframe, crace, *racenames)
-		w.pack(side=tk.LEFT)
+		w.grid(row=0,column=0, sticky=tk.NW)
 		
 	def themesmenu(self):
 		global ctheme
@@ -190,13 +226,24 @@ class Application(tk.Frame):
 		ctheme.set(themenames[0])
 		ctheme.trace("w",self.refreshchar)
 		w = tk.OptionMenu(topframe, ctheme, *themenames)
-		w.pack(side=tk.LEFT)
+		w.grid(row=0,column=1, sticky=tk.N)
+		
+	def classesmenu(self):
+		global cclass
+		cclass = tk.StringVar(topframe)
+		cclass.set(classnames[0])
+		cclass.trace("w",self.refreshchar)
+		w = tk.OptionMenu(topframe, cclass, *classnames)
+		w.grid(row=0,column=2, sticky=tk.NE)
 		
 	def charstats(self):
 		i=1
 		settheme = ctheme.get()
 		setrace = crace.get()
+		setclass = cclass.get()
+		keyab = classes[setclass]['Key']
 		abiwarning=False
+		abtotals={}
 		
 		if themes[settheme]['Any'] > 0:
 			dTVar = tk.OptionMenu(charframe, cTVar, *abilities)
@@ -211,7 +258,10 @@ class Application(tk.Frame):
 			races[setrace][cRVar.get()]=races[setrace]['Any']
 		
 		for ab in abilities:
-			lab=tk.Label(charframe, text=ab)
+			if(ab == keyab):
+				lab=tk.Label(charframe, text=ab, fg="blue")
+			else:
+				lab=tk.Label(charframe, text=ab)
 			lab.grid(row=i, column=0, sticky=tk.E)
 			lbscore=tk.Label(charframe, text="10")
 			lbscore.grid(row=i, column=1, sticky=tk.W)
@@ -233,11 +283,12 @@ class Application(tk.Frame):
 			lequals.grid(row=i, column=6, sticky=tk.W)
 			
 			tAB = 10 + races[setrace][ab] + themes[settheme][ab] + cVars[i-1].get()
+			abtotals.setdefault(ab,tAB)
 			if tAB > 18:
 				lAB = tk.Label(charframe, text=str(tAB)+" (illegal)",fg="red")
 				abiwarning=True
 			else:
-				lAB = tk.Label(charframe, text=str(tAB)+" ("+modifiers[tAB]+")")
+				lAB = tk.Label(charframe, text=str(tAB)+" ("+getmodstring(getabmod(tAB))+")")
 			lAB.grid(row=i, column=7, sticky=tk.W)
 			i+=1
 				
@@ -245,37 +296,45 @@ class Application(tk.Frame):
 		dStr = tk.OptionMenu(charframe,cStr, *pointarray)
 		dStr.grid(row=1, column=5, sticky=tk.W)
 		
-		dDex = tk.OptionMenu(charframe,cStr, *pointarray)
+		dDex = tk.OptionMenu(charframe,cDex, *pointarray)
 		dDex.grid(row=2, column=5, sticky=tk.W)
 		
-		dCon = tk.OptionMenu(charframe,cStr, *pointarray)
+		dCon = tk.OptionMenu(charframe,cCon, *pointarray)
 		dCon.grid(row=3, column=5, sticky=tk.W)
 				
-		dInt = tk.OptionMenu(charframe,cStr, *pointarray)
+		dInt = tk.OptionMenu(charframe,cInt, *pointarray)
 		dInt.grid(row=4, column=5, sticky=tk.W)
 				
-		dWis = tk.OptionMenu(charframe,cStr, *pointarray)
+		dWis = tk.OptionMenu(charframe,cWis, *pointarray)
 		dWis.grid(row=5, column=5, sticky=tk.W)
 				
-		dCha = tk.OptionMenu(charframe,cStr, *pointarray)
+		dCha = tk.OptionMenu(charframe,cCha, *pointarray)
 		dCha.grid(row=6, column=5, sticky=tk.W)
 
 		points = cStr.get() + cDex.get() + cCon.get() + cInt.get() + cWis.get() + cCha.get()
+		
+		tHP = races[setrace]['HP'] + classes[setclass]['HP']
+		tSP = classes[setclass]['SP'] + getabmod(abtotals['Con'])
+		tRP = 1 + getabmod(abtotals[keyab])
+		
+		statslabel = tk.Label(charframe, text="Hit Points (HP): "+str(tHP)+"\nStamina (SP): "+str(tSP)+"\nResolve (RP): "+str(tRP))
+		statslabel.grid(row=8, column=0, columnspan=8, sticky=tk.S)
 		
 		if points == 10:
 			plabel=tk.Label(charframe, text=str(points)+"/10 points spent.")
 		else:
 			plabel=tk.Label(charframe, text=str(points)+"/10 points spent.",fg="red")
-		plabel.grid(row=7, column=0, columnspan=7, sticky=tk.W)
+		plabel.grid(row=7, column=0, columnspan=8, sticky=tk.S)
 		
 		if abiwarning:
 			alabel=tk.Label(charframe, text="No starting ability score may exceed 18!",fg="red")
-			alabel.grid(row=8, column=0, columnspan=7, sticky=tk.W)
+			alabel.grid(row=9, column=0, columnspan=8, sticky=tk.S)
 			
 		if races[setrace]['Boon']:
 			wlabel=tk.Label(charframe, text="Boon required to play this character in Starfinder Society.")
-			wlabel.grid(row=9, column=0, columnspan=7, sticky=tk.W)
+			wlabel.grid(row=10, column=0, columnspan=8, sticky=tk.S)
 		
+load_classes()
 load_themes()		
 load_races()
 root=tk.Tk()
