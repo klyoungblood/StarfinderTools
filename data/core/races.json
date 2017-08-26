@@ -1,0 +1,93 @@
+[
+	{
+	"name":"Human",
+	"Any":2
+	},
+	{
+	"name":"Android",
+	"Dex":2,
+	"Int":2,
+	"Cha":-2
+	},	
+	{
+	"name":"Kasatha",
+	"Str":2,
+	"Wis":2,
+	"Int":-2
+	},	
+	{
+	"name":"Lashunta (Damaya)",
+	"Int":2,
+	"Con":-2,
+	"Cha":2
+	},	
+	{
+	"name":"Lashunta (Korasha)",
+	"Str":2,
+	"Wis":-2,
+	"Cha":2
+	},	
+	{
+	"name":"Shirren",
+	"Con":2,
+	"Wis":2,
+	"Cha":-2
+	},	
+	{
+	"name":"Vesk",
+	"Con":2,
+	"Str":2,
+	"Int":-2
+	},	
+	{
+	"name":"Ysoki",
+	"Int":2,
+	"Str":-2,
+	"Dex":2
+	},	
+	{
+	"name":"Dwarf",
+	"Con":2,
+	"Cha":-2,
+	"Wis":2,
+	"Boon": true
+	},	
+	{
+	"name":"Elf",
+	"Con":-2,
+	"Int":2,
+	"Dex":2,
+	"Boon": true
+	},	
+	{
+	"name":"Gnome (Bleachling)",
+	"Con":2,
+	"Str":-2,
+	"Int":2,
+	"Boon": true
+	},		
+	{
+	"name":"Gnome (Feychild)",
+	"Con":2,
+	"Str":-2,
+	"Cha":2,
+	"Boon": true
+	},		
+	{
+	"name":"Half-Elf",
+	"Any":2,
+	"Boon": true
+	},
+	{
+	"name":"Half-Orc",
+	"Any":2,
+	"Boon": true
+	},
+	{
+	"name":"Halfling",
+	"Dex":2,
+	"Str":-2,
+	"Cha":2,
+	"Boon": true
+	}
+]

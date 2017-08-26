@@ -1,0 +1,58 @@
+[
+	{
+	"name":"Themeless",
+	"Any":1,
+	"skill":"Any"
+	},
+	{
+	"name":"Ace pilot",
+	"Dex":1,
+	"skill":"Piloting"
+	},
+	{
+	"name":"Bounty Hunter",
+	"Con":1,
+	"skill":"Survival"
+	},
+	{
+	"name":"Icon",
+	"Cha":1,
+	"skill":"Culture"
+	},
+	{
+	"name":"Mercenary",
+	"Str":1,
+	"skill":"Athletics"
+	},
+	{
+	"name":"Outlaw",
+	"Dex":1,
+	"skill":"Sleight of Hand"
+	},
+	{
+	"name":"Priest",
+	"Wis":1,
+	"skill":"Mysticism"
+	},
+	{
+	"name":"Scholar (Life Science)",
+	"Int":1,
+	"skill":"Life Science"
+	},
+	{
+	"name":"Scholar (Pyhsical Science)",
+	"Int":1,
+	"skill":"Physical Science"
+	},
+	{
+	"name":"Spacefarer",
+	"Con":1,
+	"skill":"Physical Science"
+	},
+	{
+	"name":"Xenoseeker",
+	"Cha":1,
+	"skill":"Life Science"
+	}
+	
+]
