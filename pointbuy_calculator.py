@@ -48,7 +48,7 @@ def getabmod(ascore):
 	mod = 0
 	if ascore > 10:
 		mod = (ascore - 10) / 2
-	if ascore < 9:
+	if ascore <= 9:
 		mod = lowmods[ascore]
 	return mod
 	
